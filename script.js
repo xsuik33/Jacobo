@@ -9,14 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'fotos/bg3.jpg'
     ];
 
-    // LA IMAGEN ÚNICA PARA EL FINAL (cuando sale el pastel)
-    // Asegúrate de tener este archivo 'final_bg.jpg' en /fotos/
     const finalBackgroundPath = 'Imagenes/Foto10.jpg'; 
 
     const bgSlider = document.getElementById('background-slider');
     let currentBgIndex = 0;
     const bgImages = [];
-    let bgInterval; // Almacenamos el intervalo para poder detenerlo
+    let bgInterval; 
 
     backgroundPaths.forEach((path, index) => {
         const div = document.createElement('div');
@@ -38,22 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
         bgInterval = setInterval(changeBackground, 6000);
     }
 
-    // Función para fijar el fondo final único
     function setFinalBackground() {
-        // 1. Detenemos el slideshow
         if (bgInterval) clearInterval(bgInterval);
-
         if (!bgSlider) return;
 
-        // 2. Limpiamos las imágenes actuales del fondo
         bgSlider.innerHTML = ''; 
-
-        // 3. Creamos la imagen final única
         const finalImage = document.createElement('div');
         finalImage.classList.add('bg-image');
         finalImage.style.backgroundImage = `url(${finalBackgroundPath})`;
-        finalImage.style.opacity = '1'; // Aseguramos opacidad total inmediata
-        finalImage.classList.add('visible'); // La hacemos visible
+        finalImage.style.opacity = '1'; 
+        finalImage.classList.add('visible'); 
         bgSlider.appendChild(finalImage);
     }
 
@@ -121,11 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const festiveColors = ['#ff6b6b', '#f9ca24', '#6ab0ab', '#ffffff'];
 
     function launchConfettiBurst(e) {
-        // Por defecto, centrado por si algo falla
         let x = window.innerWidth / 2;
         let y = window.innerHeight / 2;
 
-        // Extraemos las coordenadas exactas dependiendo de si es touch o clic
         if (e.clientX !== undefined && e.clientY !== undefined) {
             x = e.clientX;
             y = e.clientY;
@@ -163,22 +153,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================
-    // 4. NAVEGACIÓN DE TARJETAS (SLIDES)
+    // 4. NAVEGACIÓN DE TARJETAS Y LOGICA DE AUDIO DE INICIO
     // =========================================================
     const slides = document.querySelectorAll('.slide');
+    const musicaInicio = document.getElementById('musica-inicio');
     let currentSlideIndex = 0;
 
     document.body.addEventListener('click', (e) => {
-        // No avanzar si se hace clic en el video (para controles) o en el pastel
         if (e.target.tagName.toLowerCase() === 'video' || e.target.id === 'el-pastel') {
             return; 
+        }
+
+        // CONTROL: Activar música de inicio en el primer toque de la pantalla
+        if (musicaInicio && musicaInicio.paused && !slides[currentSlideIndex].classList.contains('video-slide') && !slides[currentSlideIndex].classList.contains('final-slide')) {
+            musicaInicio.play().catch(err => console.log("Audio bloqueado temporalmente"));
         }
 
         launchConfettiBurst(e); 
 
         if (currentSlideIndex < slides.length - 1) {
             
-            // Pausar el video si pasamos de tarjeta
             const currentVideo = slides[currentSlideIndex].querySelector('video');
             if(currentVideo) currentVideo.pause();
 
@@ -192,18 +186,17 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 nextSlide.classList.add('active');
                 
-                // Si llegamos a la tarjeta con la clase especial, iniciamos el festejo masivo
                 if (nextSlide.classList.contains('celebration-trigger')) {
                     startFinalCelebration();
                 }
 
-                // Si llegamos a la tarjeta del video, intentamos reproducirlo
+                // CONTROL: Si llegamos al video, pausamos la música de inicio
                 const video = nextSlide.querySelector('video');
                 if (video) {
+                    if (musicaInicio) musicaInicio.pause(); // Pausa la de ambiente
                     video.play().catch(err => console.log("Play manual requerido"));
                 }
 
-                // SI ES LA ÚLTIMA TARJETA (la del pastel), fijamos el fondo final
                 if (currentSlideIndex === slides.length - 1) {
                     setFinalBackground();
                 }
@@ -212,21 +205,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =========================================================
-    // 5. EVENTO ESPECIAL DEL PASTEL
+    // 5. EVENTO ESPECIAL DEL PASTEL Y AUDIO FINAL
     // =========================================================
     const pastel = document.getElementById('el-pastel');
     const textoFinal = document.getElementById('texto-final');
     const instruccionPastel = document.querySelector('.instruccion-pastel');
+    const musicaFinal = document.getElementById('musica-final');
 
     if (pastel) {
         pastel.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita clics dobles en el body
+            e.stopPropagation(); 
             
-            // Inicia la explosión del pastel
+            // Activa la música final del pastel
+            if (musicaFinal) {
+                musicaFinal.play().catch(err => console.log("Bloqueo de audio final:", err));
+            }
+
             pastel.classList.add('explode-anim');
             if (instruccionPastel) instruccionPastel.style.display = 'none';
             
-            // Súper ráfaga de confeti desde el centro
             confetti({
                 particleCount: 300,
                 spread: 180,
@@ -235,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 startVelocity: 45
             });
             
-            // Muestra el texto final
             setTimeout(() => {
                 pastel.style.display = 'none';
                 textoFinal.style.display = 'block';
