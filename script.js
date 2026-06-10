@@ -116,14 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LÓGICA DE LAS FOTOS ALEATORIAS (SE MANTIENE IGUAL) ---
     const photoPaths = [
-        'Imagenes/foto1.jpeg',
-        'Imagenes/foto2.jpeg',
-        'Imagenes/foto3.jpeg',
-        'Imagenes/foto4.jpeg',
-        'Imagenes/foto5.jpeg',
-        'Imagenes/foto6.jpeg',
-        'Imagenes/foto7.jpeg',
-        'Imagenes/foto8.jpeg',
+        'Imagenes/Foto1.jpeg',
+        'Imagenes/Foto2.jpeg',
+        'Imagenes/Foto3.jpeg',
+        'Imagenes/Foto4.jpeg',
+        'Imagenes/Foto5.jpeg',
+        'Imagenes/Foto6.jpeg',
+        'Imagenes/Foto7.jpeg',
+        'Imagenes/Foto8.jpeg',
     ];
 
     function createFloatingPhoto() {
