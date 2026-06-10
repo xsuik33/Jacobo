@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // LA IMAGEN ÚNICA PARA EL FINAL (cuando sale el pastel)
     // Asegúrate de tener este archivo 'final_bg.jpg' en /fotos/
-    const finalBackgroundPath = 'fotos/final_bg.jpg'; 
+    const finalBackgroundPath = 'Imagenes/Foto10.jpg'; 
 
     const bgSlider = document.getElementById('background-slider');
     let currentBgIndex = 0;
