@@ -49,6 +49,23 @@ body {
     z-index: 1;
 }
 
+/* --- FOTOS FLOTANTES ALEATORIAS --- */
+.floating-photo {
+    position: absolute;
+    border-radius: 15px;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 4s ease-out;
+    z-index: 2; /* Encima de la capa blanca, pero debajo de las tarjetas */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    pointer-events: none; /* Evita que bloqueen los clics en la pantalla */
+}
+
+.floating-photo.active {
+    opacity: 0.9;
+    transform: scale(1.05); /* Pequeño zoom mientras aparecen */
+}
+
 /* --- EFECTOS DE FUEGOS ARTIFICIALES --- */
 #fireworks-container {
     position: absolute;
@@ -117,7 +134,7 @@ h1 {
     
     padding: 25px 30px;
     border-radius: 22px;
-    border: 3px solid #f9ca24; /* Amarillo festivo */
+    border: 3px solid #f9ca24; 
     
     font-size: 1.5rem;
     font-weight: 500;
@@ -131,7 +148,7 @@ h1 {
 /* Cuadro final para cerrar con broche de oro */
 .mensaje-cuadro.destaque {
     background: rgba(255, 255, 255, 0.85);
-    border: 4px solid #ff6b6b; /* Borde coral vivo */
+    border: 4px solid #ff6b6b; 
     font-weight: 600;
     color: #ff6b6b;
     box-shadow: 0 20px 45px rgba(255, 107, 107, 0.35);

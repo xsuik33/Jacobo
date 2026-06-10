@@ -1,30 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- LÓGICA DEL FONDO DE DIAPOSITIVAS (FOTOS DE JACOBIN) ---
-    // Guarda tus imágenes en una carpeta llamada 'fotos' como bg1.jpg, bg2.jpg, etc.
+    // =========================================================
+    // 1. LÓGICA DEL FONDO DE DIAPOSITIVAS (FOTOS DE JACOBIN)
+    // =========================================================
     const backgroundPaths = [
         'fotos/bg1.jpg',
         'fotos/bg2.jpg',
-        'fotos/bg3.jpg',
-        'fotos/bg4.jpg',
-        'fotos/bg5.jpg'
+        'fotos/bg3.jpg'
     ];
 
     const bgSlider = document.getElementById('background-slider');
     let currentBgIndex = 0;
     const bgImages = [];
 
-    // Pre-cargar imágenes en el slider
     backgroundPaths.forEach((path, index) => {
         const div = document.createElement('div');
         div.classList.add('bg-image');
         div.style.backgroundImage = `url(${path})`;
         if (index === 0) div.classList.add('visible');
-        bgSlider.appendChild(div);
+        if (bgSlider) bgSlider.appendChild(div);
         bgImages.push(div);
     });
 
-    // Cambiar imagen de fondo cíclicamente
     function changeBackground() {
         if (bgImages.length <= 1) return;
         bgImages[currentBgIndex].classList.remove('visible');
@@ -32,13 +29,63 @@ document.addEventListener('DOMContentLoaded', () => {
         bgImages[currentBgIndex].classList.add('visible');
     }
 
-    // Intervalo de 6 segundos por foto de fondo
     if (bgImages.length > 1) {
         setInterval(changeBackground, 6000);
     }
 
+    // =========================================================
+    // 2. LÓGICA DE LAS FOTOS QUE APARECEN ALEATORIAMENTE
+    // =========================================================
+    const floatingPaths = [
+        'Imagenes/Foto1.jpg',
+        'Imagenes/Foto2.jpg',
+        'Imagenes/Foto3.jpg',
+        'Imagenes/Foto4.jpg',
+        'Imagenes/Foto5.jpg',
+        'Imagenes/Foto6.jpg',
+        'Imagenes/Foto7.jpg',
+        'Imagenes/Foto8.jpg',
+    ];
 
-    // --- CONFIGURACIÓN DE EFECTOS VISUALES ---
+    function createFloatingPhoto() {
+        if (floatingPaths.length === 0) return;
+
+        const img = document.createElement('img');
+        const randomPath = floatingPaths[Math.floor(Math.random() * floatingPaths.length)];
+        
+        img.src = randomPath;
+        img.classList.add('floating-photo');
+
+        // Tamaño aleatorio para las fotos que saltan
+        const size = Math.random() * 150 + 120;
+        img.style.width = `${size}px`;
+        img.style.height = `${size}px`;
+
+        const maxX = window.innerWidth - size;
+        const maxY = window.innerHeight - size;
+        
+        img.style.left = `${Math.random() * maxX}px`;
+        img.style.top = `${Math.random() * maxY}px`;
+
+        document.body.appendChild(img);
+
+        const transitionTime = 1000; 
+        const visibleDuration = 3000; 
+        const totalLifecycle = transitionTime + visibleDuration + transitionTime;
+
+        setTimeout(() => img.classList.add('active'), 50);
+        setTimeout(() => img.classList.remove('active'), transitionTime + visibleDuration);
+        setTimeout(() => img.remove(), totalLifecycle);
+    }
+
+    // Aparece una foto flotante nueva cada 2 segundos
+    setInterval(createFloatingPhoto, 2000);
+    createFloatingPhoto(); 
+
+
+    // =========================================================
+    // 3. CONFIGURACIÓN DE EFECTOS VISUALES (CONFETI Y FUEGOS)
+    // =========================================================
     const fwContainer = document.getElementById('fireworks-container');
     const fireworks = new Fireworks.default(fwContainer, {
         autoresize: true,
@@ -60,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const festiveColors = ['#ff6b6b', '#f9ca24', '#6ab0ab', '#ffffff'];
 
-    // Ráfaga de confeti donde el usuario haga clic/toque
     function launchConfettiBurst(e) {
         const x = e.clientX || (e.touches && e.touches[0].clientX);
         const y = e.clientY || (e.touches && e.touches[0].clientY);
@@ -73,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lluvia constante lateral de confeti para el final
     let confettiRainInterval;
     function startConfettiRain() {
         if (confettiRainInterval) return;
@@ -83,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200); 
     }
 
-    // Gran fiesta final
     function startFinalCelebration() {
         fireworks.start();
         startConfettiRain();
@@ -93,13 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => confetti({ particleCount: 180, spread: 120, origin: { y: 0.6 }, colors: festiveColors }), 700);
     }
 
-
-    // --- NAVEGACIÓN DE TARJETAS (SLIDES) ---
+    // =========================================================
+    // 4. NAVEGACIÓN DE TARJETAS (SLIDES)
+    // =========================================================
     const slides = document.querySelectorAll('.slide');
     let currentSlideIndex = 0;
 
     document.body.addEventListener('click', (e) => {
-        // Lanzamos confeti sutil con cada transición
         launchConfettiBurst(e); 
 
         if (currentSlideIndex < slides.length - 1) {
@@ -113,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 nextSlide.classList.add('active');
                 
-                // Si llegamos a la tarjeta con los nombres de ustedes, se desata el festejo masivo
                 if (currentSlideIndex === slides.length - 1) {
                     startFinalCelebration();
                 }
