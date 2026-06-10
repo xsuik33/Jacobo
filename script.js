@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // =========================================================
-    // 1. LÓGICA DEL FONDO DE DIAPOSITIVAS (FOTOS DE JACOBIN)
-    // =========================================================
+    // 1. FONDOS DE DIAPOSITIVAS
     const backgroundPaths = [
         'fotos/bg1.jpg',
         'fotos/bg2.jpg',
@@ -33,9 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(changeBackground, 6000);
     }
 
-    // =========================================================
-    // 2. LÓGICA DE LAS FOTOS QUE APARECEN ALEATORIAMENTE
-    // =========================================================
+    // 2. FOTOS FLOTANTES
     const floatingPaths = [
         'Imagenes/Foto1.jpeg',
         'Imagenes/Foto2.jpeg',
@@ -45,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'Imagenes/Foto6.jpeg',
         'Imagenes/Foto7.jpeg',
         'Imagenes/Foto8.jpeg',
+        'Imagenes/Foto9.jpeg',
+        'Imagenes/Foto10.jpeg',
     ];
 
     function createFloatingPhoto() {
@@ -56,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = randomPath;
         img.classList.add('floating-photo');
 
-        // Tamaño aleatorio para las fotos que saltan
         const size = Math.random() * 150 + 120;
         img.style.width = `${size}px`;
         img.style.height = `${size}px`;
@@ -78,45 +75,26 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => img.remove(), totalLifecycle);
     }
 
-    // Aparece una foto flotante nueva cada 2 segundos
     setInterval(createFloatingPhoto, 2000);
     createFloatingPhoto(); 
 
 
-    // =========================================================
-    // 3. CONFIGURACIÓN DE EFECTOS VISUALES (CONFETI Y FUEGOS)
-    // =========================================================
+    // 3. EFECTOS (CONFETI Y FUEGOS)
     const fwContainer = document.getElementById('fireworks-container');
     const fireworks = new Fireworks.default(fwContainer, {
-        autoresize: true,
-        opacity: 0.7,
-        acceleration: 1.05,
-        friction: 0.98,
-        gravity: 1.8,
-        particles: 60,
-        trace: 2,
-        explosion: 6,
-        intensity: 35,
-        flickering: 50,
-        lineStyle: 'round',
-        hue: { min: 0, max: 360 },
-        delay: { min: 12, max: 22 },
-        brightness: { min: 60, max: 100 },
-        decay: { min: 0.015, max: 0.03 }
+        autoresize: true, opacity: 0.7, acceleration: 1.05, friction: 0.98, gravity: 1.8,
+        particles: 60, trace: 2, explosion: 6, intensity: 35, flickering: 50,
+        lineStyle: 'round', hue: { min: 0, max: 360 }, delay: { min: 12, max: 22 },
+        brightness: { min: 60, max: 100 }, decay: { min: 0.015, max: 0.03 }
     });
 
     const festiveColors = ['#ff6b6b', '#f9ca24', '#6ab0ab', '#ffffff'];
 
     function launchConfettiBurst(e) {
-        const x = e.clientX || (e.touches && e.touches[0].clientX);
-        const y = e.clientY || (e.touches && e.touches[0].clientY);
+        const x = e.clientX || (e.touches && e.touches[0].clientX) || (window.innerWidth / 2);
+        const y = e.clientY || (e.touches && e.touches[0].clientY) || (window.innerHeight / 2);
         
-        confetti({
-            particleCount: 45,
-            spread: 65,
-            origin: { x: x / window.innerWidth, y: y / window.innerHeight },
-            colors: festiveColors
-        });
+        confetti({ particleCount: 45, spread: 65, origin: { x: x / window.innerWidth, y: y / window.innerHeight }, colors: festiveColors });
     }
 
     let confettiRainInterval;
@@ -131,19 +109,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function startFinalCelebration() {
         fireworks.start();
         startConfettiRain();
-        
         setTimeout(() => confetti({ particleCount: 120, spread: 90, origin: { x: 0.1, y: 0.5 }, colors: festiveColors }), 100);
         setTimeout(() => confetti({ particleCount: 120, spread: 90, origin: { x: 0.9, y: 0.5 }, colors: festiveColors }), 400);
         setTimeout(() => confetti({ particleCount: 180, spread: 120, origin: { y: 0.6 }, colors: festiveColors }), 700);
     }
 
-    // =========================================================
-    // 4. NAVEGACIÓN DE TARJETAS (SLIDES)
-    // =========================================================
+    // 4. NAVEGACIÓN Y EVENTOS
     const slides = document.querySelectorAll('.slide');
     let currentSlideIndex = 0;
 
     document.body.addEventListener('click', (e) => {
+        // Si el clic fue en el video mismo, NO avanzamos tarjeta (para permitir controles)
+        if (e.target.tagName.toLowerCase() === 'video') {
+            return; 
+        }
+
         launchConfettiBurst(e); 
 
         if (currentSlideIndex < slides.length - 1) {
@@ -157,8 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 nextSlide.classList.add('active');
                 
-                if (currentSlideIndex === slides.length - 1) {
+                // Si llegamos a la tarjeta con la clase especial, iniciamos el festejo masivo
+                if (nextSlide.classList.contains('celebration-trigger')) {
                     startFinalCelebration();
+                }
+
+                // Si llegamos a la tarjeta del video, intentamos reproducirlo
+                const video = nextSlide.querySelector('video');
+                if (video) {
+                    video.play().catch(err => console.log("El navegador pide que el usuario le de play manualmente."));
                 }
             }, 200);
         }

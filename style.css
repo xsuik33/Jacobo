@@ -14,7 +14,6 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- CONTROLADOR DE IMÁGENES DE FONDO --- */
 #background-slider {
     position: fixed;
     top: 0;
@@ -38,7 +37,6 @@ body {
     opacity: 1;
 }
 
-/* Capa con luz blanca que suaviza las fotos de fondo */
 .background-overlay {
     position: fixed;
     top: 0;
@@ -49,24 +47,22 @@ body {
     z-index: 1;
 }
 
-/* --- FOTOS FLOTANTES ALEATORIAS --- */
 .floating-photo {
     position: absolute;
     border-radius: 15px;
     object-fit: cover;
     opacity: 0;
     transition: opacity 1s ease-in-out, transform 4s ease-out;
-    z-index: 2; /* Encima de la capa blanca, pero debajo de las tarjetas */
+    z-index: 2; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    pointer-events: none; /* Evita que bloqueen los clics en la pantalla */
+    pointer-events: none; 
 }
 
 .floating-photo.active {
     opacity: 0.9;
-    transform: scale(1.05); /* Pequeño zoom mientras aparecen */
+    transform: scale(1.05); 
 }
 
-/* --- EFECTOS DE FUEGOS ARTIFICIALES --- */
 #fireworks-container {
     position: absolute;
     top: 0;
@@ -77,7 +73,6 @@ body {
     pointer-events: none;
 }
 
-/* --- COMPORTAMIENTO DE DIAPOSITIVAS (TARJETAS) --- */
 .slide {
     position: absolute;
     top: 50%;
@@ -126,26 +121,21 @@ h1 {
     100% { opacity: 0.5; }
 }
 
-/* --- CAJAS DE MENSAJES LUMINOSAS Y CON VIDA --- */
 .mensaje-cuadro {
     background: rgba(255, 255, 255, 0.75); 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    
     padding: 25px 30px;
     border-radius: 22px;
     border: 3px solid #f9ca24; 
-    
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.4;
     color: #2c3e50;
-    
     box-shadow: 0 15px 35px rgba(106, 176, 171, 0.25);
     display: inline-block;
 }
 
-/* Cuadro final para cerrar con broche de oro */
 .mensaje-cuadro.destaque {
     background: rgba(255, 255, 255, 0.85);
     border: 4px solid #ff6b6b; 
@@ -154,12 +144,33 @@ h1 {
     box-shadow: 0 20px 45px rgba(255, 107, 107, 0.35);
 }
 
-/* Adaptación rápida a dispositivos móviles */
+/* --- ESTILOS PARA LA DIAPOSITIVA DEL VIDEO --- */
+.video-slide {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro estilo cine */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+}
+
+#video-sorpresa {
+    max-width: 95%;
+    max-height: 85vh;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    border: 4px solid #ff6b6b;
+    outline: none;
+}
+
 @media (max-width: 600px) {
     h1 {
         font-size: 2rem;
     }
-
     .mensaje-cuadro {
         font-size: 1.2rem;
         padding: 20px;
