@@ -1,82 +1,78 @@
 body {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     background-color: #1e1e2e; 
     color: #cdd6f4;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
     position: relative;
+    cursor: pointer; /* Hace que el cursor sea una manito en toda la pantalla */
 }
 
-.container {
-    text-align: center;
-    background: #313244;
-    padding: 3rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    max-width: 500px; /* Lo hice un poco más ancho para que quepan bien los textos */
-    width: 90%;
+/* --- ESTILOS DE LAS TARJETAS --- */
+.slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.6s ease-in, opacity 0.4s ease-in; /* Animación de salida */
     z-index: 10;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Tarjeta visible */
+.slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}
+
+/* Animación: Tirar hacia la derecha */
+.slide.throw-right {
+    transform: translate(150vw, -20%) rotate(25deg); /* Se va a la derecha y se gira un poco */
+    opacity: 0;
+    visibility: hidden;
 }
 
 h1 {
     color: #89b4fa;
-    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-.hidden {
-    display: none;
+.instruccion {
+    color: #a6adc8;
+    font-style: italic;
+    animation: pulse 2s infinite;
 }
 
-.visible {
-    display: block;
-    animation: fadeIn 1s ease-in-out;
-    margin-bottom: 2rem;
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 
-/* --- ESTILOS PARA LOS CUADROS DE MENSAJE --- */
+/* --- ESTILOS DE LOS CUADROS DE TEXTO --- */
 .mensaje-cuadro {
-    background-color: #45475a; /* Color de fondo del cuadro */
-    padding: 12px 15px;
-    margin-bottom: 10px; /* Separación entre cuadros */
-    border-radius: 8px;
-    border-left: 4px solid #89b4fa; /* Una línea azul decorativa a la izquierda */
-    text-align: left;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    background-color: #313244;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 5px solid #89b4fa;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: inline-block;
 }
 
 .mensaje-cuadro.destaque {
-    border-left: 4px solid #a6e3a1; /* Línea verde para el último mensaje */
-    text-align: center;
+    border-left: 5px solid #a6e3a1;
     font-weight: bold;
     color: #a6e3a1;
-}
-
-button {
-    background-color: #a6e3a1;
-    color: #11111b;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-}
-
-button:hover {
-    background-color: #94e2d5;
-    transform: scale(1.05);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- ESTILOS PARA LAS FOTOS CON RESPLANDOR --- */
@@ -85,12 +81,11 @@ button:hover {
     border-radius: 12px;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 1s ease-in-out, box-shadow 1s ease-in-out; /* Animamos también el resplandor */
+    transition: opacity 1s ease-in-out, box-shadow 1s ease-in-out;
     z-index: 1; 
 }
 
 .floating-photo.active {
     opacity: 0.8;
-    /* AQUÍ ESTÁ EL RESPLANDOR: Es una sombra exterior azulada y amplia */
-    box-shadow: 0 0 30px 15px rgba(137, 180, 250, 0.6); 
+    box-shadow: 0 0 30px 15px rgba(137, 180, 250, 0.6); /* El resplandor azul */
 }

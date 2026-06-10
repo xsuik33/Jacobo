@@ -7,19 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 id="title">Tengo algo para ti...</h1>
+    
+    <!-- Contenedor de todas las tarjetas -->
+    <div id="slides-container">
         
-        <!-- Contenedor del mensaje oculto -->
-        <div id="message" class="hidden">
+        <div class="slide active">
+            <h1>Tengo algo para ti...</h1>
+            <p class="instruccion">(Haz clic en cualquier parte)</p>
+        </div>
+
+        <div class="slide">
             <div class="mensaje-cuadro">Hola jacobin,</div>
+        </div>
+
+        <div class="slide">
             <div class="mensaje-cuadro">esto lo hice yo con ayuda de melisa e donovan,</div>
+        </div>
+
+        <div class="slide">
             <div class="mensaje-cuadro">puede q te dijeras q no nos acordamos de tu cumpleaños pero no es asi</div>
+        </div>
+
+        <div class="slide">
             <div class="mensaje-cuadro">nos acordamos de nuestro real</div>
+        </div>
+
+        <div class="slide">
             <div class="mensaje-cuadro destaque">te deseamos un feliz cumpleaños de parte de los 3-</div>
         </div>
-        
-        <button id="btn-reveal">Ver sorpresa</button>
+
     </div>
+
     <script src="script.js"></script>
+</body>
 </html>
