@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Imagenes/Foto7.jpeg',
         'Imagenes/Foto8.jpeg',
         'Imagenes/Foto9.jpeg',
-        'Imagenes/Foto10.jpeg',
+        'Imagenes/Foto10.jpg',
     ];
 
     function createFloatingPhoto() {
