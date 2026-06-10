@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(changeBackground, 6000);
     }
 
-    
+    // 2. FOTOS FLOTANTES
     const floatingPaths = [
         'Imagenes/Foto1.jpeg',
         'Imagenes/Foto2.jpeg',
