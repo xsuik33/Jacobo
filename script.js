@@ -1,15 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // 1. FONDOS DE DIAPOSITIVAS
+    // =========================================================
+    // 1. LÓGICA DEL FONDO DE DIAPOSITIVAS (FOTOS DE JACOBIN)
+    // =========================================================
     const backgroundPaths = [
         'fotos/bg1.jpg',
         'fotos/bg2.jpg',
         'fotos/bg3.jpg'
     ];
 
+    // LA IMAGEN ÚNICA PARA EL FINAL (cuando sale el pastel)
+    // Asegúrate de tener este archivo 'final_bg.jpg' en /fotos/
+    const finalBackgroundPath = 'fotos/final_bg.jpg'; 
+
     const bgSlider = document.getElementById('background-slider');
     let currentBgIndex = 0;
     const bgImages = [];
+    let bgInterval; // Almacenamos el intervalo para poder detenerlo
 
     backgroundPaths.forEach((path, index) => {
         const div = document.createElement('div');
@@ -28,10 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (bgImages.length > 1) {
-        setInterval(changeBackground, 6000);
+        bgInterval = setInterval(changeBackground, 6000);
     }
 
-    // 2. FOTOS FLOTANTES
+    // Función para fijar el fondo final único
+    function setFinalBackground() {
+        // 1. Detenemos el slideshow
+        if (bgInterval) clearInterval(bgInterval);
+
+        if (!bgSlider) return;
+
+        // 2. Limpiamos las imágenes actuales del fondo
+        bgSlider.innerHTML = ''; 
+
+        // 3. Creamos la imagen final única
+        const finalImage = document.createElement('div');
+        finalImage.classList.add('bg-image');
+        finalImage.style.backgroundImage = `url(${finalBackgroundPath})`;
+        finalImage.style.opacity = '1'; // Aseguramos opacidad total inmediata
+        finalImage.classList.add('visible'); // La hacemos visible
+        bgSlider.appendChild(finalImage);
+    }
+
+    // =========================================================
+    // 2. LÓGICA DE LAS FOTOS QUE APARECEN ALEATORIAMENTE
+    // =========================================================
     const floatingPaths = [
         'Imagenes/Foto1.jpeg',
         'Imagenes/Foto2.jpeg',
@@ -79,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
     createFloatingPhoto(); 
 
 
-    // 3. EFECTOS (CONFETI Y FUEGOS)
+    // =========================================================
+    // 3. CONFIGURACIÓN DE EFECTOS VISUALES (CONFETI Y FUEGOS)
+    // =========================================================
     const fwContainer = document.getElementById('fireworks-container');
     const fireworks = new Fireworks.default(fwContainer, {
         autoresize: true, opacity: 0.7, acceleration: 1.05, friction: 0.98, gravity: 1.8,
@@ -132,8 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => confetti({ particleCount: 180, spread: 120, origin: { y: 0.6 }, colors: festiveColors }), 700);
     }
 
-
-    // 4. NAVEGACIÓN Y EVENTOS
+    // =========================================================
+    // 4. NAVEGACIÓN DE TARJETAS (SLIDES)
+    // =========================================================
     const slides = document.querySelectorAll('.slide');
     let currentSlideIndex = 0;
 
@@ -161,19 +192,28 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 nextSlide.classList.add('active');
                 
+                // Si llegamos a la tarjeta con la clase especial, iniciamos el festejo masivo
                 if (nextSlide.classList.contains('celebration-trigger')) {
                     startFinalCelebration();
                 }
 
+                // Si llegamos a la tarjeta del video, intentamos reproducirlo
                 const video = nextSlide.querySelector('video');
                 if (video) {
                     video.play().catch(err => console.log("Play manual requerido"));
+                }
+
+                // SI ES LA ÚLTIMA TARJETA (la del pastel), fijamos el fondo final
+                if (currentSlideIndex === slides.length - 1) {
+                    setFinalBackground();
                 }
             }, 200);
         }
     });
 
+    // =========================================================
     // 5. EVENTO ESPECIAL DEL PASTEL
+    // =========================================================
     const pastel = document.getElementById('el-pastel');
     const textoFinal = document.getElementById('texto-final');
     const instruccionPastel = document.querySelector('.instruccion-pastel');
@@ -200,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pastel.style.display = 'none';
                 textoFinal.style.display = 'block';
                 textoFinal.classList.add('fade-in-text');
-            }, 400); // Se alinea con el tiempo de la animación CSS
+            }, 400); 
         });
     }
 
