@@ -2,9 +2,8 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    /* Fondo claro por defecto si las fotos no cargan */
-    background-color: #fcfcfc; 
-    color: #333; /* Texto oscuro para legibilidad */
+    background-color: #f7f9fc; 
+    color: #2c3e50;
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
     position: relative;
@@ -15,7 +14,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- SISTEMA DE FOTOS DE FONDO --- */
+/* --- CONTROLADOR DE IMÁGENES DE FONDO --- */
 #background-slider {
     position: fixed;
     top: 0;
@@ -32,36 +31,36 @@ body {
     background-size: cover;
     background-position: center;
     opacity: 0;
-    transition: opacity 1.5s ease-in-out; /* Transición suave entre fotos */
+    transition: opacity 1.5s ease-in-out;
 }
 
 .bg-image.visible {
     opacity: 1;
 }
 
-/* Capa clara para asegurar contraste del texto */
+/* Capa con luz blanca que suaviza las fotos de fondo */
 .background-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.75); /* 75% blanco */
+    background-color: rgba(255, 255, 255, 0.75); 
     z-index: 1;
 }
 
-/* --- CONTENEDOR DE FUEGOS ARTIFICIALES (Z-index alto) --- */
+/* --- EFECTOS DE FUEGOS ARTIFICIALES --- */
 #fireworks-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 5; /* Detrás de las tarjetas */
+    z-index: 5;
     pointer-events: none;
 }
 
-/* --- ESTILOS DE LAS TARJETAS (Z-index alto) --- */
+/* --- COMPORTAMIENTO DE DIAPOSITIVAS (TARJETAS) --- */
 .slide {
     position: absolute;
     top: 50%;
@@ -73,7 +72,7 @@ body {
     z-index: 10;
     text-align: center;
     width: 90%;
-    max-width: 550px;
+    max-width: 520px;
 }
 
 .slide.active {
@@ -88,13 +87,13 @@ body {
     visibility: hidden;
 }
 
-/* Títulos con fuente festiva */
 h1 {
     font-family: 'Fredoka', sans-serif;
-    color: #ff6b6b; /* Color coral alegre */
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    text-shadow: 2px 2px 0px rgba(255, 212, 121, 0.5); /* Sombra suave amarilla */
+    color: #ff6b6b;
+    font-size: 2.8rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 0px rgba(255, 212, 121, 0.4);
 }
 
 .instruccion {
@@ -110,50 +109,42 @@ h1 {
     100% { opacity: 0.5; }
 }
 
-/* --- ESTILOS DE LOS CUADROS DE MENSAJE (Cards) --- */
+/* --- CAJAS DE MENSAJES LUMINOSAS Y CON VIDA --- */
 .mensaje-cuadro {
-    /* Efecto Vidrio Esmerilado (Glassmorphism) */
-    background: rgba(255, 255, 255, 0.6); 
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.75); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     
-    padding: 30px;
-    border-radius: 25px;
+    padding: 25px 30px;
+    border-radius: 22px;
+    border: 3px solid #f9ca24; /* Amarillo festivo */
     
-    /* Borde pastel amarillo */
-    border: 3px solid #f9ca24;
-    
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.4;
-    color: #2c3e50; /* Texto oscuro festivo */
+    color: #2c3e50;
     
-    /* Sombra suave y de color pastel (menta) */
-    box-shadow: 0 15px 35px rgba(106, 176, 171, 0.3);
-        
+    box-shadow: 0 15px 35px rgba(106, 176, 171, 0.25);
     display: inline-block;
 }
 
-/* Tarjeta final destacado */
+/* Cuadro final para cerrar con broche de oro */
 .mensaje-cuadro.destaque {
-    background: rgba(255, 255, 255, 0.8);
-    border: 4px solid #ff6b6b; /* Borde coral */
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.85);
+    border: 4px solid #ff6b6b; /* Borde coral vivo */
+    font-weight: 600;
     color: #ff6b6b;
-    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.4);
+    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.35);
 }
 
-/* =========================================
-   ADAPTACIÓN PARA TELÉFONOS (RESPONSIVE)
-   ========================================= */
+/* Adaptación rápida a dispositivos móviles */
 @media (max-width: 600px) {
     h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 
     .mensaje-cuadro {
         font-size: 1.2rem;
         padding: 20px;
-        border-radius: 20px;
     }
 }
