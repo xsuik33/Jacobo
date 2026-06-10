@@ -37,14 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. LÓGICA DE LAS FOTOS QUE APARECEN ALEATORIAMENTE
     // =========================================================
     const floatingPaths = [
-        'Imagenes/Foto1.jpg',
-        'Imagenes/Foto2.jpg',
-        'Imagenes/Foto3.jpg',
-        'Imagenes/Foto4.jpg',
-        'Imagenes/Foto5.jpg',
-        'Imagenes/Foto6.jpg',
-        'Imagenes/Foto7.jpg',
-        'Imagenes/Foto8.jpg',
+        'Imagenes/Foto1.jpeg',
+        'Imagenes/Foto2.jpeg',
+        'Imagenes/Foto3.jpeg',
+        'Imagenes/Foto4.jpeg',
+        'Imagenes/Foto5.jpeg',
+        'Imagenes/Foto6.jpeg',
+        'Imagenes/Foto7.jpeg',
+        'Imagenes/Foto8.jpeg',
     ];
 
     function createFloatingPhoto() {
