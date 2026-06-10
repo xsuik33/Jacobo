@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(changeBackground, 6000);
     }
 
-    // 2. FOTOS FLOTANTES
+    
     const floatingPaths = [
         'Imagenes/Foto1.jpeg',
         'Imagenes/Foto2.jpeg',
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Imagenes/Foto7.jpeg',
         'Imagenes/Foto8.jpeg',
         'Imagenes/Foto9.jpeg',
-        'Imagenes/Foto10.jpg',
+        'Imagenes/Foto10.jpg'
     ];
 
     function createFloatingPhoto() {
@@ -91,10 +91,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const festiveColors = ['#ff6b6b', '#f9ca24', '#6ab0ab', '#ffffff'];
 
     function launchConfettiBurst(e) {
-        const x = e.clientX || (e.touches && e.touches[0].clientX) || (window.innerWidth / 2);
-        const y = e.clientY || (e.touches && e.touches[0].clientY) || (window.innerHeight / 2);
+        // Por defecto, centrado por si algo falla
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+
+        // Extraemos las coordenadas exactas dependiendo de si es touch o clic
+        if (e.clientX !== undefined && e.clientY !== undefined) {
+            x = e.clientX;
+            y = e.clientY;
+        } else if (e.touches && e.touches.length > 0) {
+            x = e.touches[0].clientX;
+            y = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+            x = e.changedTouches[0].clientX;
+            y = e.changedTouches[0].clientY;
+        }
         
-        confetti({ particleCount: 45, spread: 65, origin: { x: x / window.innerWidth, y: y / window.innerHeight }, colors: festiveColors });
+        confetti({ 
+            particleCount: 45, 
+            spread: 65, 
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight }, 
+            colors: festiveColors 
+        });
     }
 
     let confettiRainInterval;
@@ -114,19 +132,25 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => confetti({ particleCount: 180, spread: 120, origin: { y: 0.6 }, colors: festiveColors }), 700);
     }
 
+
     // 4. NAVEGACIÓN Y EVENTOS
     const slides = document.querySelectorAll('.slide');
     let currentSlideIndex = 0;
 
     document.body.addEventListener('click', (e) => {
-        // Si el clic fue en el video mismo, NO avanzamos tarjeta (para permitir controles)
-        if (e.target.tagName.toLowerCase() === 'video') {
+        // No avanzar si se hace clic en el video (para controles) o en el pastel
+        if (e.target.tagName.toLowerCase() === 'video' || e.target.id === 'el-pastel') {
             return; 
         }
 
         launchConfettiBurst(e); 
 
         if (currentSlideIndex < slides.length - 1) {
+            
+            // Pausar el video si pasamos de tarjeta
+            const currentVideo = slides[currentSlideIndex].querySelector('video');
+            if(currentVideo) currentVideo.pause();
+
             const currentSlide = slides[currentSlideIndex];
             currentSlide.classList.remove('active');
             currentSlide.classList.add('throw-right');
@@ -137,18 +161,47 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 nextSlide.classList.add('active');
                 
-                // Si llegamos a la tarjeta con la clase especial, iniciamos el festejo masivo
                 if (nextSlide.classList.contains('celebration-trigger')) {
                     startFinalCelebration();
                 }
 
-                // Si llegamos a la tarjeta del video, intentamos reproducirlo
                 const video = nextSlide.querySelector('video');
                 if (video) {
-                    video.play().catch(err => console.log("El navegador pide que el usuario le de play manualmente."));
+                    video.play().catch(err => console.log("Play manual requerido"));
                 }
             }, 200);
         }
     });
+
+    // 5. EVENTO ESPECIAL DEL PASTEL
+    const pastel = document.getElementById('el-pastel');
+    const textoFinal = document.getElementById('texto-final');
+    const instruccionPastel = document.querySelector('.instruccion-pastel');
+
+    if (pastel) {
+        pastel.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita clics dobles en el body
+            
+            // Inicia la explosión del pastel
+            pastel.classList.add('explode-anim');
+            if (instruccionPastel) instruccionPastel.style.display = 'none';
+            
+            // Súper ráfaga de confeti desde el centro
+            confetti({
+                particleCount: 300,
+                spread: 180,
+                origin: { y: 0.5 },
+                colors: festiveColors,
+                startVelocity: 45
+            });
+            
+            // Muestra el texto final
+            setTimeout(() => {
+                pastel.style.display = 'none';
+                textoFinal.style.display = 'block';
+                textoFinal.classList.add('fade-in-text');
+            }, 400); // Se alinea con el tiempo de la animación CSS
+        });
+    }
 
 });
