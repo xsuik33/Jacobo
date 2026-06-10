@@ -1,27 +1,116 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- INICIALIZACIÓN DE LIBRERÍAS ---
+    // 1. Fuegos Artificiales
+    const fwContainer = document.getElementById('fireworks-container');
+    const fireworks = new Fireworks.default(fwContainer, {
+        autoresize: true,
+        opacity: 0.5,
+        acceleration: 1.05,
+        friction: 0.97,
+        gravity: 1.5,
+        particles: 50,
+        trace: 3,
+        explosion: 5,
+        intensity: 30,
+        flickering: 50,
+        lineStyle: 'round',
+        hue: { min: 0, max: 360 },
+        delay: { min: 15, max: 30 },
+        rocketsPoint: { min: 50, max: 50 },
+        lineWidth: { explode: { min: 1, max: 3 }, trace: { min: 1, max: 2 } },
+        brightness: { min: 50, max: 80 },
+        decay: { min: 0.015, max: 0.03 },
+        mouse: { click: false, move: false, max: 1 } // Desactivamos el control por mouse por defecto
+    });
+
+    // --- FUNCIONES DE CELEBRACIÓN ---
+
+    // A. Explosión de Confeti (Ráfaga única)
+    function launchConfettiBurst() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 } // Un poco más abajo del centro
+        });
+    }
+
+    // B. Lluvia de Confeti (Continua y ligera)
+    let confettiRainInterval;
+    function startConfettiRain() {
+        if (confettiRainInterval) return; // Evita duplicar
+        confettiRainInterval = setInterval(() => {
+            confetti({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#89b4fa', '#a6e3a1']
+            });
+            confetti({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ff00ea', '#00f2ff']
+            });
+        }, 150); // Lluvia ligera cada 150ms
+    }
+
+    // C. Explosión de Fuegos Artificiales (Ráfaga única en el toque)
+    function launchFireworkBurst(e) {
+        // Obtenemos la posición del toque/clic
+        const x = e.clientX || (e.touches && e.touches[0].clientX);
+        const y = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        // Lanzamos una explosión única en esa coordenada
+        if (x && y) {
+            fireworks.launch(1, {
+                rocketsPoint: { min: (x / window.innerWidth) * 100, max: (x / window.innerWidth) * 100 },
+                hue: { min: 0, max: 360 }
+            });
+        }
+    }
+
+    // D. Celebración Masiva Final
+    function startFinalCelebration() {
+        fireworks.start(); // Iniciamos fuegos artificiales continuos
+        startConfettiRain(); // Iniciamos lluvia de confeti continua
+        
+        // Lanzamos 3 ráfagas grandes de confeti en diferentes puntos
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.2, y: 0.5 } }), 200);
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.8, y: 0.5 } }), 500);
+        setTimeout(() => confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } }), 800);
+    }
+
     // --- LÓGICA DE LAS TARJETAS (SLIDES) ---
     const slides = document.querySelectorAll('.slide');
     let currentSlideIndex = 0;
 
-    // Escuchamos el clic en todo el documento
-    document.body.addEventListener('click', () => {
-        // Si aún hay tarjetas por mostrar
+    // Escuchamos el clic/toque en todo el documento
+    document.body.addEventListener('click', (e) => {
+        // 1. Efecto en cada toque
+        launchConfettiBurst(); // Ráfaga pequeña de confeti
+        launchFireworkBurst(e); // Fuegos artificiales en el punto de toque
+
+        // 2. Lógica de cambio de tarjeta
         if (currentSlideIndex < slides.length - 1) {
             
-            // 1. Tomamos la tarjeta actual y la lanzamos a la derecha
             const currentSlide = slides[currentSlideIndex];
             currentSlide.classList.remove('active');
             currentSlide.classList.add('throw-right');
             
-            // 2. Avanzamos al siguiente índice
             currentSlideIndex++;
             
-            // 3. Mostramos la nueva tarjeta con un pequeñísimo retraso
             const nextSlide = slides[currentSlideIndex];
             setTimeout(() => {
                 nextSlide.classList.add('active');
-            }, 200); // 200ms de retraso para que se vea el cambio
+                
+                // 3. Si es la ÚLTIMA tarjeta, activamos la celebración masiva
+                if (currentSlideIndex === slides.length - 1) {
+                    startFinalCelebration();
+                }
+            }, 200);
         }
     });
 
@@ -64,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => img.remove(), totalLifecycle);
     }
 
-    const intervalDuration = 2000; 
+    const intervalDuration = 2500; // Fotos un poco más lentas para no saturar con el confeti
     setInterval(createFloatingPhoto, intervalDuration);
     createFloatingPhoto(); 
 });
