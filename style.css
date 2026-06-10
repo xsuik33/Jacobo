@@ -2,9 +2,10 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background-color: #0a0a12; /* Un tono más oscuro para que resalten los fuegos artificiales */
-    color: #cdd6f4;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Fondo claro por defecto si las fotos no cargan */
+    background-color: #fcfcfc; 
+    color: #333; /* Texto oscuro para legibilidad */
+    font-family: 'Poppins', sans-serif;
     overflow: hidden;
     position: relative;
     cursor: pointer;
@@ -14,18 +15,53 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- CONTENEDOR DE FUEGOS ARTIFICIALES --- */
+/* --- SISTEMA DE FOTOS DE FONDO --- */
+#background-slider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.bg-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out; /* Transición suave entre fotos */
+}
+
+.bg-image.visible {
+    opacity: 1;
+}
+
+/* Capa clara para asegurar contraste del texto */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.75); /* 75% blanco */
+    z-index: 1;
+}
+
+/* --- CONTENEDOR DE FUEGOS ARTIFICIALES (Z-index alto) --- */
 #fireworks-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Detrás de las tarjetas (10) */
-    pointer-events: none; /* No interfiere con los clics */
+    z-index: 5; /* Detrás de las tarjetas */
+    pointer-events: none;
 }
 
-/* --- ESTILOS DE LAS TARJETAS (z-index alto) --- */
+/* --- ESTILOS DE LAS TARJETAS (Z-index alto) --- */
 .slide {
     position: absolute;
     top: 50%;
@@ -33,11 +69,11 @@ body {
     transform: translate(-50%, -50%);
     opacity: 0;
     visibility: hidden;
-    transition: transform 0.6s ease-in, opacity 0.4s ease-in;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease-in;
     z-index: 10;
     text-align: center;
     width: 90%;
-    max-width: 500px;
+    max-width: 550px;
 }
 
 .slide.active {
@@ -52,16 +88,19 @@ body {
     visibility: hidden;
 }
 
+/* Títulos con fuente festiva */
 h1 {
-    color: #89b4fa;
-    font-size: 2.5rem;
+    font-family: 'Fredoka', sans-serif;
+    color: #ff6b6b; /* Color coral alegre */
+    font-size: 3rem;
     margin-bottom: 0.5rem;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    text-shadow: 2px 2px 0px rgba(255, 212, 121, 0.5); /* Sombra suave amarilla */
 }
 
 .instruccion {
-    color: #a6adc8;
+    color: #7f8c8d;
     font-style: italic;
+    font-size: 1.1rem;
     animation: pulse 2s infinite;
 }
 
@@ -71,36 +110,37 @@ h1 {
     100% { opacity: 0.5; }
 }
 
-/* --- ESTILOS DE LOS CUADROS DE TEXTO --- */
+/* --- ESTILOS DE LOS CUADROS DE MENSAJE (Cards) --- */
 .mensaje-cuadro {
-    background-color: #1e1e2e;
-    padding: 20px;
-    border-radius: 12px;
-    border-left: 5px solid #89b4fa;
-    font-size: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    /* Efecto Vidrio Esmerilado (Glassmorphism) */
+    background: rgba(255, 255, 255, 0.6); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    padding: 30px;
+    border-radius: 25px;
+    
+    /* Borde pastel amarillo */
+    border: 3px solid #f9ca24;
+    
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #2c3e50; /* Texto oscuro festivo */
+    
+    /* Sombra suave y de color pastel (menta) */
+    box-shadow: 0 15px 35px rgba(106, 176, 171, 0.3);
+        
     display: inline-block;
 }
 
+/* Tarjeta final destacado */
 .mensaje-cuadro.destaque {
-    border-left: 5px solid #a6e3a1;
-    font-weight: bold;
-    color: #a6e3a1;
-}
-
-/* --- ESTILOS PARA LAS FOTOS CON RESPLANDOR (z-index bajo) --- */
-.floating-photo {
-    position: absolute;
-    border-radius: 12px;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1s ease-in-out, box-shadow 1s ease-in-out;
-    z-index: 1; 
-}
-
-.floating-photo.active {
-    opacity: 0.5; /* Reducida un poco más para los efectos nuevos */
-    box-shadow: 0 0 30px 15px rgba(137, 180, 250, 0.4);
+    background: rgba(255, 255, 255, 0.8);
+    border: 4px solid #ff6b6b; /* Borde coral */
+    font-weight: 700;
+    color: #ff6b6b;
+    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.4);
 }
 
 /* =========================================
@@ -108,20 +148,12 @@ h1 {
    ========================================= */
 @media (max-width: 600px) {
     h1 {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
     }
 
     .mensaje-cuadro {
-        font-size: 1.1rem;
-        padding: 15px;
-        border-left: 4px solid #89b4fa;
-    }
-
-    .mensaje-cuadro.destaque {
-        border-left: 4px solid #a6e3a1;
-    }
-
-    .instruccion {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
+        padding: 20px;
+        border-radius: 20px;
     }
 }

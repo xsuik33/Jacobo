@@ -1,86 +1,120 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- INICIALIZACIÓN DE LIBRERÍAS ---
+    // --- LÓGICA DEL FONDO DE DIAPOSITIVAS (PHOTOS) ---
+    // Asegúrate de tener estas fotos en /fotos/bg1.jpg, etc.
+    const backgroundPaths = [
+        'fotos/bg1.jpg',
+        'fotos/bg2.jpg',
+        'fotos/bg3.jpg',
+        'fotos/bg4.jpg',
+        'fotos/bg5.jpg'
+    ];
+
+    const bgSlider = document.getElementById('background-slider');
+    let currentBgIndex = 0;
+    const bgImages = [];
+
+    // 1. Pre-cargar imágenes y crearlas en el DOM
+    backgroundPaths.forEach((path, index) => {
+        const div = document.createElement('div');
+        div.classList.add('bg-image');
+        div.style.backgroundImage = `url(${path})`;
+        if (index === 0) div.classList.add('visible'); // La primera es visible
+        bgSlider.appendChild(div);
+        bgImages.push(div);
+    });
+
+    // 2. Función para cambiar de foto
+    function changeBackground() {
+        // Ocultamos la actual
+        bgImages[currentBgIndex].classList.remove('visible');
+        
+        // Siguiente índice (bucle)
+        currentBgIndex = (currentBgIndex + 1) % bgImages.length;
+        
+        // Mostramos la nueva
+        bgImages[currentBgIndex].classList.add('visible');
+    }
+
+    // 3. Iniciar el bucle de fondo cada 6 segundos
+    if (bgImages.length > 1) {
+        setInterval(changeBackground, 6000); // 6 segundos por foto
+    }
+
+
+    // --- INICIALIZACIÓN DE EFECTOS FIESTA (Ajustados para fondo claro) ---
     // 1. Fuegos Artificiales
     const fwContainer = document.getElementById('fireworks-container');
     const fireworks = new Fireworks.default(fwContainer, {
         autoresize: true,
-        opacity: 0.5,
+        opacity: 0.8, // Más opacos para que se vean en fondo blanco
         acceleration: 1.05,
-        friction: 0.97,
-        gravity: 1.5,
-        particles: 50,
-        trace: 3,
-        explosion: 5,
-        intensity: 30,
+        friction: 0.98,
+        gravity: 2,
+        particles: 70,
+        trace: 2,
+        explosion: 6,
+        intensity: 40,
         flickering: 50,
         lineStyle: 'round',
         hue: { min: 0, max: 360 },
-        delay: { min: 15, max: 30 },
+        delay: { min: 10, max: 20 },
         rocketsPoint: { min: 50, max: 50 },
-        lineWidth: { explode: { min: 1, max: 3 }, trace: { min: 1, max: 2 } },
-        brightness: { min: 50, max: 80 },
+        lineWidth: { explode: { min: 2, max: 4 }, trace: { min: 1, max: 2 } },
+        brightness: { min: 60, max: 100 }, // Más brillantes
         decay: { min: 0.015, max: 0.03 },
-        mouse: { click: false, move: false, max: 1 } // Desactivamos el control por mouse por defecto
+        mouse: { click: false, move: false, max: 1 } 
     });
+
+    // Colores alegres para el confeti
+    const confettiColors = ['#ff6b6b', '#f9ca24', '#6ab0ab', '#fff'];
 
     // --- FUNCIONES DE CELEBRACIÓN ---
 
-    // A. Explosión de Confeti (Ráfaga única)
-    function launchConfettiBurst() {
+    // A. Explosión de Confeti (Ráfaga única en el toque)
+    function launchConfettiBurst(e) {
+        const x = e.clientX || (e.touches && e.touches[0].clientX);
+        const y = e.clientY || (e.touches && e.touches[0].clientY);
+        
         confetti({
-            particleCount: 100,
+            particleCount: 60,
             spread: 70,
-            origin: { y: 0.6 } // Un poco más abajo del centro
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight },
+            colors: confettiColors
         });
     }
 
-    // B. Lluvia de Confeti (Continua y ligera)
+    // B. Lluvia continua final
     let confettiRainInterval;
     function startConfettiRain() {
-        if (confettiRainInterval) return; // Evita duplicar
+        if (confettiRainInterval) return;
         confettiRainInterval = setInterval(() => {
             confetti({
                 particleCount: 2,
                 angle: 60,
                 spread: 55,
                 origin: { x: 0 },
-                colors: ['#89b4fa', '#a6e3a1']
+                colors: confettiColors
             });
             confetti({
                 particleCount: 2,
                 angle: 120,
                 spread: 55,
                 origin: { x: 1 },
-                colors: ['#ff00ea', '#00f2ff']
+                colors: confettiColors
             });
-        }, 150); // Lluvia ligera cada 150ms
+        }, 200); 
     }
 
-    // C. Explosión de Fuegos Artificiales (Ráfaga única en el toque)
-    function launchFireworkBurst(e) {
-        // Obtenemos la posición del toque/clic
-        const x = e.clientX || (e.touches && e.touches[0].clientX);
-        const y = e.clientY || (e.touches && e.touches[0].clientY);
-        
-        // Lanzamos una explosión única en esa coordenada
-        if (x && y) {
-            fireworks.launch(1, {
-                rocketsPoint: { min: (x / window.innerWidth) * 100, max: (x / window.innerWidth) * 100 },
-                hue: { min: 0, max: 360 }
-            });
-        }
-    }
-
-    // D. Celebración Masiva Final
+    // C. Celebración Masiva Final
     function startFinalCelebration() {
-        fireworks.start(); // Iniciamos fuegos artificiales continuos
-        startConfettiRain(); // Iniciamos lluvia de confeti continua
+        fireworks.start(); // Iniciamos fuegos continuos
+        startConfettiRain(); // Iniciamos lluvia continua
         
-        // Lanzamos 3 ráfagas grandes de confeti en diferentes puntos
-        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.2, y: 0.5 } }), 200);
-        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.8, y: 0.5 } }), 500);
-        setTimeout(() => confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } }), 800);
+        // 3 ráfagas grandes con la paleta de colores
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.1, y: 0.5 }, colors: confettiColors }), 100);
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.9, y: 0.5 }, colors: confettiColors }), 400);
+        setTimeout(() => confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 }, colors: confettiColors }), 700);
     }
 
     // --- LÓGICA DE LAS TARJETAS (SLIDES) ---
@@ -89,9 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Escuchamos el clic/toque en todo el documento
     document.body.addEventListener('click', (e) => {
-        // 1. Efecto en cada toque
-        launchConfettiBurst(); // Ráfaga pequeña de confeti
-        launchFireworkBurst(e); // Fuegos artificiales en el punto de toque
+        // 1. Efecto visual en cada toque (confeti)
+        launchConfettiBurst(e); 
 
         // 2. Lógica de cambio de tarjeta
         if (currentSlideIndex < slides.length - 1) {
@@ -114,49 +147,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- LÓGICA DE LAS FOTOS ALEATORIAS (SE MANTIENE IGUAL) ---
-    const photoPaths = [
-        'Imagenes/Foto1.jpeg',
-        'Imagenes/Foto2.jpeg',
-        'Imagenes/Foto3.jpeg',
-        'Imagenes/Foto4.jpeg',
-        'Imagenes/Foto5.jpeg',
-        'Imagenes/Foto6.jpeg',
-        'Imagenes/Foto7.jpeg',
-        'Imagenes/Foto8.jpeg',
-    ];
-
-    function createFloatingPhoto() {
-        if (photoPaths.length === 0) return;
-
-        const img = document.createElement('img');
-        const randomPath = photoPaths[Math.floor(Math.random() * photoPaths.length)];
-        
-        img.src = randomPath;
-        img.classList.add('floating-photo');
-
-        const size = Math.random() * 150 + 100;
-        img.style.width = `${size}px`;
-        img.style.height = `${size}px`;
-
-        const maxX = window.innerWidth - size;
-        const maxY = window.innerHeight - size;
-        
-        img.style.left = `${Math.random() * maxX}px`;
-        img.style.top = `${Math.random() * maxY}px`;
-
-        document.body.appendChild(img);
-
-        const transitionTime = 1000; 
-        const visibleDuration = 4000; 
-        const totalLifecycle = transitionTime + visibleDuration + transitionTime;
-
-        setTimeout(() => img.classList.add('active'), 50);
-        setTimeout(() => img.classList.remove('active'), transitionTime + visibleDuration);
-        setTimeout(() => img.remove(), totalLifecycle);
-    }
-
-    const intervalDuration = 2500; // Fotos un poco más lentas para no saturar con el confeti
-    setInterval(createFloatingPhoto, intervalDuration);
-    createFloatingPhoto(); 
 });
