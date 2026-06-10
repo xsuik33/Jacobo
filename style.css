@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1e1e2e; 
+    color: #cdd6f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+.container {
+    text-align: center;
+    background: #313244;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 500px; /* Lo hice un poco más ancho para que quepan bien los textos */
+    width: 90%;
+    z-index: 10;
+}
+
+h1 {
+    color: #89b4fa;
+    margin-bottom: 1.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+    animation: fadeIn 1s ease-in-out;
+    margin-bottom: 2rem;
+}
+
+/* --- ESTILOS PARA LOS CUADROS DE MENSAJE --- */
+.mensaje-cuadro {
+    background-color: #45475a; /* Color de fondo del cuadro */
+    padding: 12px 15px;
+    margin-bottom: 10px; /* Separación entre cuadros */
+    border-radius: 8px;
+    border-left: 4px solid #89b4fa; /* Una línea azul decorativa a la izquierda */
+    text-align: left;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.mensaje-cuadro.destaque {
+    border-left: 4px solid #a6e3a1; /* Línea verde para el último mensaje */
+    text-align: center;
+    font-weight: bold;
+    color: #a6e3a1;
+}
+
+button {
+    background-color: #a6e3a1;
+    color: #11111b;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+button:hover {
+    background-color: #94e2d5;
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- ESTILOS PARA LAS FOTOS CON RESPLANDOR --- */
+.floating-photo {
+    position: absolute;
+    border-radius: 12px;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, box-shadow 1s ease-in-out; /* Animamos también el resplandor */
+    z-index: 1; 
+}
+
+.floating-photo.active {
+    opacity: 0.8;
+    /* AQUÍ ESTÁ EL RESPLANDOR: Es una sombra exterior azulada y amplia */
+    box-shadow: 0 0 30px 15px rgba(137, 180, 250, 0.6); 
+}
